@@ -1,4 +1,5 @@
-// Meething Slack Bot
+/ Meething Slack Bot
+const request = require('request');
 const express = require("express");
 const app = express();
 var Chance = require("chance");
@@ -18,12 +19,31 @@ var getRoom = function(room) {
 
 app.post("/meething", (request, response) => {
   console.log('got request!');
-  var randomRoom = chance.animal() + "_" + chance.first() + "_" + chance.city();
+  var randomRoom = chance.animal().trim() + "_" + chance.first().trim() + "_" + chance.city().trim();
   var conference =
     "Videoroom Ready at: https://us.meething.space/?room=" + randomRoom.trim();
   // express helps us take JS objects and send them as JSON
   var res = getRoom(conference);
   response.json(res);
+});
+
+app.get('/auth', function(req, res){
+  if (!req.query.code) { // access denied
+    return;
+  }
+  var data = {form: {
+    client_id: process.env.SLACK_CLIENT_ID,
+    client_secret: process.env.SLACK_CLIENT_SECRET,
+    code: req.query.code
+  }};
+  request.post('https://slack.com/api/oauth.access', data, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      // Get an auth token
+      let oauthToken = JSON.parse(body).access_token;
+      // OAuth done- redirect the user to wherever
+      res.redirect(__dirname + "/public/success.html");
+    }
+  })
 });
 
 const listener = app.listen(process.env.PORT, () => {
