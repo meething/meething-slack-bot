@@ -1,0 +1,25 @@
+{
+  "name": "meething-slack-bot",
+  "version": "0.0.2",
+  "description": "A simple slack bot for Meething",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "chance": "^1.1.6"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "repository": {
+    "url": "https://github.com/meething/meething-slack-bot"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}
