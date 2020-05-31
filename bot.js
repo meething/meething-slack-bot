@@ -5,6 +5,35 @@ const app = express();
 var Chance = require("chance");
 var chance = new Chance();
 
+var getRoomButton = function(room) {
+  return {
+      "response_type": "in_channel",
+      "blocks": [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": ":wave: Your Meething Room is ready!"
+          }
+        },
+        {
+          "type": "actions",
+          "elements": [
+            {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "text": "Join Meething",
+                "emoji": false
+              },
+              "url": room
+            }
+          ]
+        }
+      ]
+    }
+}
+
 var getRoom = function(room) {
   return {
     response_type: "in_channel",
@@ -22,8 +51,8 @@ app.post("/meething", (request, response) => {
   var randomRoom = chance.animal().trim() + "_" + chance.first().trim() + "_" + chance.city().trim();
   var conference =
     "Videoroom Ready at: https://us.meething.space/?room=" + randomRoom.trim();
-  // express helps us take JS objects and send them as JSON
-  var res = getRoom(conference);
+  // var res = getRoom(conference);
+  var res = getRoomButton("https://us.meething.space/" + randomRoom.trim());
   response.json(res);
 });
 
